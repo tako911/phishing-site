@@ -4,16 +4,32 @@
 <meta charset="UTF-8">
 <title>Тест</title>
 <link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCS--KYVs21K4FJwUeDhVUuRuwqXacoko",
+  authDomain: "tako-dd528.firebaseapp.com",
+  projectId: "tako-dd528",
+  storageBucket: "tako-dd528.firebasestorage.app",
+  messagingSenderId: "1009599595870",
+  appId: "1:1009599595870:web:d83ee2deff4ee71973fbcf"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
 </head>
+
 <body>
 
 <nav>
 <a href="index.html">Главная</a>
-<a href="demo.html">Демонстрация</a>
-<a href="protect.html">Защита</a>
 <a href="test.html" class="active">Тест</a>
 <a href="stats.html">Статистика</a>
-<a href="project.html">Проект</a>
 </nav>
 
 <div class="container">
@@ -22,7 +38,7 @@
 <h2>Тест</h2>
 <div id="quiz"></div>
 <button onclick="check()">Проверить</button>
-<p id="score"></p>
+<p id="res"></p>
 </div>
 
 </div>
@@ -30,59 +46,66 @@
 <script>
 
 const bank = [
-{t:"Банк просит пароль", o:["Игнор","Ввести"], c:0},
-{t:"SMS с выигрышем", o:["Фишинг","Ок"], c:0},
-{t:"URL проверка", o:["Важно","Нет"], c:0},
-{t:"Срочность в письме", o:["Фишинг","Норма"], c:0},
-{t:"faceb00k", o:["Подделка","Оригинал"], c:0},
-{t:"HTTPS", o:["Безопасно","Реклама"], c:0},
-{t:"Левые ссылки", o:["Опасно","Ок"], c:0},
-{t:"Пароль просят", o:["Фишинг","Норма"], c:0},
-{t:"Файлы от незнакомца", o:["Не открывать","Открыть"], c:0},
-{t:"Wi-Fi public", o:["Опасно","Ок"], c:0}
+{q:"Банк просит пароль", a:["Ввести","Игнор"], c:1},
+{q:"SMS с выигрышем", a:["Фишинг","Доверять"], c:0},
+{q:"Подозрительная ссылка", a:["Открыть","Удалить"], c:1},
+{q:"HTTPS сайт", a:["Безопасно","Фейк"], c:0},
+{q:"faceb00k.com", a:["Подделка","Оригинал"], c:0}
 ];
 
-function rand(a){return a.sort(()=>Math.random()-0.5)}
+function shuffle(a){return a.sort(()=>Math.random()-0.5)}
 
-let q = rand(bank).slice(0,5);
+let quiz = shuffle([...bank]).slice(0,5);
 
 function render(){
-let quiz = document.getElementById("quiz");
 
-q.forEach((x,i)=>{
-let opts = rand([
-{t:x.o[0], c:x.c==0},
-{t:x.o[1], c:x.c==1}
+let box = document.getElementById("quiz");
+
+quiz.forEach((q,i)=>{
+
+let opts = shuffle([
+{t:q.a[0], v:q.c==0?1:0},
+{t:q.a[1], v:q.c==1?1:0}
 ]);
 
-quiz.innerHTML += `<div class="question"><p>${x.t}</p>` +
-opts.map(o=>`
-<label class="option">
-<span>${o.t}</span>
-<input type="radio" name="q${i}" value="${o.c?1:0}">
-<span class="box"></span>
+box.innerHTML += `
+<div class="card">
+<p>${q.q}</p>
+
+${opts.map(o=>`
+<label>
+<input type="radio" name="q${i}" value="${o.v}">
+${o.t}
 </label>
-`).join("") + "</div>";
+`).join("")}
+
+</div>
+`;
 });
 }
 
 function check(){
+
 let score=0;
 
-q.forEach((_,i)=>{
-let opts=document.getElementsByName("q"+i);
-for(let o of opts){
-if(o.checked && o.value=="1") score++;
+quiz.forEach((_,i)=>{
+let ans = document.getElementsByName("q"+i);
+for(let a of ans){
+if(a.checked && a.value=="1") score++;
 }
 });
 
-let percent=Math.round(score/q.length*100);
+let percent = Math.round(score/quiz.length*100);
 
-document.getElementById("score").innerText="Результат: "+percent+"%";
+document.getElementById("res").innerText =
+"Результат: " + percent + "%";
 
-let r = JSON.parse(localStorage.getItem("results")||"[]");
-r.push({percent,date:new Date().toLocaleString()});
-localStorage.setItem("results",JSON.stringify(r));
+// 🔥 ONLINE SAVE
+db.collection("results").add({
+    percent: percent,
+    date: new Date().toLocaleString()
+});
+
 }
 
 render();
