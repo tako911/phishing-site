@@ -4,6 +4,24 @@
 <meta charset="UTF-8">
 <title>Фишинг проект</title>
 <link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCS--KYVs21K4FjWbeDhVUuRuwqXacoko",
+  authDomain: "tako-dd528.firebaseapp.com",
+  projectId: "tako-dd528",
+  storageBucket: "tako-dd528.firebasestorage.app",
+  messagingSenderId: "1009599595870",
+  appId: "1:1009599595870:web:d83ee2deff4ee71973fbcf"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
 </head>
 
 <body>
@@ -12,34 +30,13 @@
 <a href="index.html" class="active">Главная</a>
 <a href="test.html">Тест</a>
 <a href="stats.html">Статистика</a>
-<a href="project.html">Проект</a>
 </nav>
 
 <div class="container">
 
 <div class="card">
-<h1>🛡️ Фишинг и интернет-безопасность</h1>
-<p>
-Учебный проект, направленный на изучение фишинга,
-его видов и способов защиты пользователей в интернете.
-</p>
-</div>
-
-<div class="card">
-<h2>🎯 Цель проекта</h2>
-<p>
-Повысить цифровую грамотность пользователей и научить распознавать фишинговые сайты и сообщения.
-</p>
-</div>
-
-<div class="card">
-<h2>📌 Что есть на сайте</h2>
-<ul>
-<li>Теория о фишинге</li>
-<li>Примеры атак</li>
-<li>Тест на знание</li>
-<li>Статистика результатов</li>
-</ul>
+<h1>🛡 Фишинг</h1>
+<p>Учебный проект по интернет-безопасности</p>
 </div>
 
 </div>
