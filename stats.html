@@ -4,29 +4,40 @@
 <meta charset="UTF-8">
 <title>Статистика</title>
 <link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCS--KYVs21K4FJwUeDhVUuRuwqXacoko",
+  authDomain: "tako-dd528.firebaseapp.com",
+  projectId: "tako-dd528",
+  storageBucket: "tako-dd528.firebasestorage.app",
+  messagingSenderId: "1009599595870",
+  appId: "1:1009599595870:web:d83ee2deff4ee71973fbcf"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+
 </head>
+
 <body>
 
 <nav>
 <a href="index.html">Главная</a>
-<a href="demo.html">Демонстрация</a>
-<a href="protect.html">Защита</a>
 <a href="test.html">Тест</a>
 <a href="stats.html" class="active">Статистика</a>
-<a href="project.html">Проект</a>
 </nav>
 
 <div class="container">
 
 <div class="card">
-<h2>Статистика</h2>
+<h2>📊 Онлайн статистика</h2>
 
 <div id="avg"></div>
-
-<div class="bar">
-<div id="fill"></div>
-</div>
-
 <div id="list"></div>
 
 </div>
@@ -35,20 +46,30 @@
 
 <script>
 
-let r = JSON.parse(localStorage.getItem("results")||"[]");
+db.collection("results").get().then(snap=>{
 
 let sum=0;
-let list=document.getElementById("list");
+let count=0;
 
-r.forEach(x=>{
-sum+=x.percent;
-list.innerHTML+=`<div class="card">${x.percent}% - ${x.date}</div>`;
+snap.forEach(d=>{
+let data=d.data();
+
+sum+=data.percent;
+count++;
+
+document.getElementById("list").innerHTML += `
+<div class="card">
+📊 ${data.percent}%<br>
+🕒 ${data.date}
+</div>`;
 });
 
-let avg = r.length? Math.round(sum/r.length):0;
+let avg = count?Math.round(sum/count):0;
 
-document.getElementById("avg").innerText="Средний результат: "+avg+"%";
-document.getElementById("fill").style.width=avg+"%";
+document.getElementById("avg").innerText =
+"Средний результат: "+avg+"%";
+
+});
 
 </script>
 
