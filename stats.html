@@ -23,7 +23,6 @@ const db = firebase.firestore();
 </script>
 
 </head>
-
 <body>
 
 <nav>
@@ -46,28 +45,28 @@ const db = firebase.firestore();
 
 <script>
 
-db.collection("results").get().then(snap=>{
+db.collection("results").get().then(snapshot => {
 
-let sum=0;
-let count=0;
+let sum = 0;
+let count = 0;
 
-snap.forEach(d=>{
-let data=d.data();
+snapshot.forEach(doc => {
+let d = doc.data();
 
-sum+=data.percent;
+sum += d.percent;
 count++;
 
 document.getElementById("list").innerHTML += `
 <div class="card">
-📊 ${data.percent}%<br>
-🕒 ${data.date}
+📊 ${d.percent}%<br>
+🕒 ${d.date}
 </div>`;
 });
 
-let avg = count?Math.round(sum/count):0;
+let avg = count ? Math.round(sum / count) : 0;
 
 document.getElementById("avg").innerText =
-"Средний результат: "+avg+"%";
+"Средний результат: " + avg + "%";
 
 });
 
