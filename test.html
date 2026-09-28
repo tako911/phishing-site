@@ -23,7 +23,6 @@ const db = firebase.firestore();
 </script>
 
 </head>
-
 <body>
 
 <nav>
@@ -35,7 +34,7 @@ const db = firebase.firestore();
 <div class="container">
 
 <div class="card">
-<h2>Тест</h2>
+<h2>Тест по фишингу</h2>
 <div id="quiz"></div>
 <button onclick="check()">Проверить</button>
 <p id="res"></p>
@@ -46,11 +45,12 @@ const db = firebase.firestore();
 <script>
 
 const bank = [
-{q:"Банк просит пароль", a:["Ввести","Игнор"], c:1},
-{q:"SMS с выигрышем", a:["Фишинг","Доверять"], c:0},
-{q:"Подозрительная ссылка", a:["Открыть","Удалить"], c:1},
+{q:"Банк просит пароль", a:["Игнорировать","Ввести"], c:0},
+{q:"SMS с выигрышем", a:["Фишинг","Безопасно"], c:0},
+{q:"Подозрительная ссылка", a:["Не открывать","Открыть"], c:0},
 {q:"HTTPS сайт", a:["Безопасно","Фейк"], c:0},
-{q:"faceb00k.com", a:["Подделка","Оригинал"], c:0}
+{q:"faceb00k.com", a:["Подделка","Оригинал"], c:0},
+{q:"Просьба код из SMS", a:["Мошенничество","Нормально"], c:0}
 ];
 
 function shuffle(a){return a.sort(()=>Math.random()-0.5)}
@@ -82,11 +82,12 @@ ${o.t}
 </div>
 `;
 });
+
 }
 
 function check(){
 
-let score=0;
+let score = 0;
 
 quiz.forEach((_,i)=>{
 let ans = document.getElementsByName("q"+i);
